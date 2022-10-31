@@ -3,9 +3,10 @@
 file mkdir ./modelsim/libs/msim
 cd modelsim
 
+vmap -c
+
 vlib libs/work
 vlib libs/msim
-
 vlib libs/msim/lib
 vmap lib libs/msim/lib
 
