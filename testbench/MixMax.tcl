@@ -5,14 +5,12 @@ cd modelsim
 
 vlib libs/work
 vlib libs/msim
-
 vlib libs/msim/lib
 vmap lib libs/msim/lib
 
-vcom -2008 -work lib ../MixMax.vhd
-vcom -2008 -work lib ../mti.vhd
+vcom -2008 -work lib ../firmware/MixMax.vhd ../testbench/Testbench.vhd
 
-vsim -t fs -voptargs="+acc" lib.test
+vsim -t ns -voptargs="+acc" lib.Testbench
 set NumericStdNoWarnings 1
 set StdArithNoWarnings 1
 
@@ -23,6 +21,6 @@ if { ! [batch_mode] } {
   delete wave *
   add wave -hex *
 }
-force -freeze sim:/test/clk 1 0, 0 {50 fs} -r 100
-run 10ps
+force -freeze sim:/Testbench/clk 1 0, 0 {1 ns} -r 2ns
+run 500ns
 wave zoom full

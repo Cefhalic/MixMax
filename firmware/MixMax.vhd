@@ -90,32 +90,3 @@ BEGIN
 
 END rtl;
 
-
-
-
--- ------------------------------------------------------------------------
-entity MixMaxFli is
-port(
-    clk : in integer range 0 to 1;
-    hi , lo : out integer
-);
-end;
-
-architecture fli of MixMaxFli is
-    attribute foreign : string;
-    attribute foreign of fli : architecture is "MixMaxFli ../mixmaxfli.so";
-begin end;
--- ------------------------------------------------------------------------
-
-
-
-
-ARCHITECTURE fli OF MixMax IS
-  SIGNAL clock : integer range 0 to 1;
-  SIGNAL hi , lo : integer;
-begin
-  clock <= 1 when clk = '1' else 0;
-  MixMaxFliInstance : entity work.MixMaxFli PORT MAP( clock , hi , lo );
-  DataOut( 31 DOWNTO  0 ) <= STD_LOGIC_VECTOR( TO_SIGNED( lo , 32 ) );
-  DataOut( 60 DOWNTO 32 ) <= STD_LOGIC_VECTOR( TO_SIGNED( hi , 29 ) );  
-end;

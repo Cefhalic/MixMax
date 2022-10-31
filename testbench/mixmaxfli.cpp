@@ -1,5 +1,4 @@
 #include "mti.h"
-#include <stdio.h>
 #include "mixmax2.hpp"
 
 // create one struct that contains all vhdl signals that need to be passed to the function
@@ -11,9 +10,9 @@ typedef struct
 
 
 // the process function that will be called on each event (in this case only clk)
-static void counter( void *param )
+static void MixmaxProcess( void *param )
 {   
-    port_t * ip = (port_t *) param;           // connect function argument to counter struct
+    port_t * ip = (port_t *) param;                 // connect function argument to port struct
     mtiInt32T clk = mti_GetSignalValue ( ip->clk ); // get current values from the vhdl world
 
     static tRngState lState;
@@ -21,21 +20,21 @@ static void counter( void *param )
     {
         base_signal::clock();
         uint64_t lVal = lState.get();
-        mti_ScheduleDriver( ip->lo , ( lVal >>  0 ) & 0xFFFFFFFF , 0 , MTI_INERTIAL );
-        mti_ScheduleDriver( ip->hi , ( lVal >> 32 ) & 0xFFFFFFFF , 0 , MTI_INERTIAL );
+
+        uint32_t lo = ( lVal >>  0 ) & 0x7FFFFFFF;
+        uint32_t hi = ( lVal >> 31 ) & 0x3FFFFFFF;
+
+        mti_ScheduleDriver( ip->lo , lo , 0 , MTI_INERTIAL );
+        mti_ScheduleDriver( ip->hi , hi , 0 , MTI_INERTIAL );
     }
-
-
 }
 
 
 extern "C" {  // only need to export C interface if used by C++ source code
-    void MixMaxFli(
-        mtiRegionIdT region, // location in the design
-        char *parameters, // from vhdl world (not used)
-        mtiInterfaceListT *generics, // from vhdl world (not used)
-        mtiInterfaceListT *ports // linked list of ports
-    )
+    void MixMaxFli( mtiRegionIdT region, // location in the design
+                    char *parameters, // from vhdl world (not used)
+                    mtiInterfaceListT *generics, // from vhdl world (not used)
+                    mtiInterfaceListT *ports ) // linked list of ports
     {
         // create a struct to store a link for each vhdl signal
         port_t *ip = (port_t *) mti_Malloc( sizeof(port_t) );
@@ -46,9 +45,9 @@ extern "C" {  // only need to export C interface if used by C++ source code
         ip->lo  = mti_CreateDriver( mti_FindPort( ports , (char*)("lo") ) );
         ip->hi  = mti_CreateDriver( mti_FindPort( ports , (char*)("hi") ) );
 
-        // create "counter" process with a link to all vhdl signals where the links to the vhdl signals are in the struct
-        mtiProcessIdT process_id = mti_CreateProcess( (char*)("counter_p") , counter , ip );
-        // trigger “counter” process when event on vhdl signal clk
+        // create "MixmaxProcess" process with a link to all vhdl signals where the links to the vhdl signals are in the struct
+        mtiProcessIdT process_id = mti_CreateProcess( (char*)("MixmaxProcess") , MixmaxProcess , ip );
+        // trigger “MixmaxProcess” process when event on vhdl signal clk
         mti_Sensitize( process_id , ip->clk , MTI_EVENT );
     }
 }

@@ -4,22 +4,24 @@ default: all
 all: _all
 build: _all
 buildall: _all
-_all: mixmaxfli.so mixmax2.exe
+_all: testbench/mixmaxfli.so mixmax2.exe mixmax_orig.exe
 
 .PHONY: clean modelsim
 
 clean:
-	rm -f mixmaxfli.so mixmax2.exe modelsim.ini
+	rm -rf testbench/mixmaxfli.so mixmax2.exe mixmax_orig.exe modelsim.ini modelsim
 
 modelsim.ini:
 	vmap -c
 
-modelsim: modelsim.ini
-	vsim -modelsimini ./modelsim.ini -do mti.tcl
+modelsim: modelsim.ini testbench/mixmaxfli.so
+	vsim -modelsimini ./modelsim.ini -do testbench/MixMax.tcl
 
-mixmaxfli.so:
-	g++ -std=c++11 -I/DataStore/modeltech/include -fPIC -shared -o mixmaxfli.so mixmaxfli.cpp
+testbench/mixmaxfli.so:
+	g++ -std=c++11 -Isoftware -I/DataStore/modeltech/include -fPIC -shared -o testbench/mixmaxfli.so testbench/mixmaxfli.cpp
 
 mixmax2.exe:
-	g++ -std=c++11 -o mixmax2.exe mixmax2.cxx
+	g++ -std=c++11 -o mixmax2.exe software/mixmax2.cxx
 
+mixmax_orig.exe:
+	g++ -std=c++11 -o mixmax_orig.exe software/mixmax_orig.cxx
