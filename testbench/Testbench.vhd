@@ -44,7 +44,7 @@ begin
     begin
         if rising_edge(clk) then
             if CNT > 0 THEN
-                assert data_vhd = data_fli report "RTL/FLI mismatch" severity error;
+                assert data_vhd = data_fli report "RTL/FLI mismatch" severity failure;
             end if;
             CNT := CNT + 1;
         end if;

@@ -20,7 +20,15 @@ if { ! [batch_mode] } {
   config wave -signalnamewidth 1
   delete wave *
   add wave -hex *
+  # add wave -divider
+  # add wave -hex MixMaxVhdInstance/W(0)
+  # add wave -hex MixMaxVhdInstance/W(13)
+  # add wave -hex MixMaxVhdInstance/PartialSumOverOld
+  # add wave -hex MixMaxVhdInstance/SumOverNew
+  # add wave -hex MixMaxVhdInstance/RotatedPreviousPartialSumOverOld
+  # add wave -hex MixMaxVhdInstance/PreSum
 }
+
 force -freeze sim:/Testbench/clk 1 0, 0 {1 ns} -r 2ns
-run 500ns
+run 5ms
 wave zoom full

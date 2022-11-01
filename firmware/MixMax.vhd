@@ -27,12 +27,7 @@ ARCHITECTURE rtl OF MixMax IS
   FUNCTION MOD_MERSENNE( aVal : SIGNED( 63 DOWNTO 0 ) ) RETURN SIGNED IS
     VARIABLE Temp : SIGNED( 63 DOWNTO 0 ) := (OTHERS=>'0');
   BEGIN
-    Temp := aVal - 64x"1FFFFFFFFFFFFFFF";
-    if Temp < 0 then
-      return aVal;
-    else
-      return Temp;
-    end if;
+    RETURN ( 3x"0" & aVal( 60 DOWNTO 0 ) ) + (61x"0" & aVal( 63 DOWNTO 61 ) );
   END FUNCTION;
   
   

@@ -1,6 +1,9 @@
 #include <stdint.h>
 #include "signal.hpp"
 
+// #include <iostream>
+// #include <iomanip>
+
 constexpr uint64_t M61( 0x1FFFFFFFFFFFFFFF );
 constexpr uint64_t M64( 0xFFFFFFFFFFFFFFFF );
 
@@ -11,9 +14,7 @@ inline constexpr uint64_t Rotate_61bit( const uint64_t& aVal , const std::size_t
 
 inline uint64_t MOD_MERSENNE( const uint64_t& aVal )
 {
-  // if ( aVal >= M61 ) return aVal - M61;
-  return aVal % M61; 
- //return (aVal & M61) + ((aVal >> 61)&0x7); 
+  return (aVal & M61) + ((aVal >> 61)&0x7); 
 }
 
 
@@ -31,6 +32,11 @@ struct tRngState
   uint64_t get()
   {
     uint64_t RetVal(0xDEADBEEF);
+
+    // std::cout << std::hex << std::setfill('0');
+    //for( auto&i : W ) std::cout << " " << std::setw(16) << *i;
+    // std::cout << " " << std::setw(16) << *W[0] << " " << std::setw(16) << *W[13] ;
+    // std::cout << " " << std::setw(16) << *PartialSumOverOld << " " << std::setw(16) << *SumOverNew << " " << std::setw(16) << *RotatedPreviousPartialSumOverOld << " " << std::setw(16) << *PreSum << std::endl;
 
     for( int i(0); i!=15; ++i ) W[ i + 1 ] = W[ i ];
 

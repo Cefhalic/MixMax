@@ -15,7 +15,7 @@ modelsim.ini:
 	vmap -c
 
 modelsim: modelsim.ini testbench/mixmaxfli.so
-	vsim -modelsimini ./modelsim.ini -do testbench/MixMax.tcl
+	vsim -nolog -modelsimini ./modelsim.ini -do testbench/MixMax.tcl
 
 testbench/mixmaxfli.so:
 	g++ -std=c++11 -Isoftware -I/DataStore/modeltech/include -fPIC -shared -o testbench/mixmaxfli.so testbench/mixmaxfli.cpp
