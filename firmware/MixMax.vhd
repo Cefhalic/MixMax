@@ -11,7 +11,7 @@ END MixMax;
 
 
 ARCHITECTURE rtl OF MixMax IS
-  TYPE tData IS ARRAY( 0 TO 15 ) OF SIGNED( 63 DOWNTO 0 );
+  TYPE tData IS ARRAY( 0 TO 13 ) OF SIGNED( 63 DOWNTO 0 );
   signal W : tData := ( OTHERS => 64x"1" );
   signal flag : std_logic_vector( 0 TO 15 ) := ( 1 =>'1' , OTHERS=>'0' );
   signal run : std_logic := '0';
@@ -41,38 +41,37 @@ BEGIN
   BEGIN
     IF RISING_EDGE( Clk ) THEN
 
-    W( 1 TO 15 ) <= W( 0 TO 14 );
-    flag( 1 TO 15 ) <= flag( 0 TO 14 );
-    flag( 0 ) <= flag( 15 );
-    run       <= run or flag(2);
+      W   ( 1 TO 13 ) <= W( 0 TO 12 );
+      flag( 0 TO 15 ) <= flag( 15 ) & flag( 0 TO 14 );
+      run             <= run or flag(2);
 
-    -- ===================================================================================
-    -- Two clock-cycles ahead
-    if( flag(1) = '1' ) then
-      RotatedPreviousPartialSumOverOld <= 64x"0";
-      PartialSumOverOld                <= W(13);
-    else
-      RotatedPreviousPartialSumOverOld <= Rotate_61bit( PartialSumOverOld , 36 );
-      PartialSumOverOld                <= MOD_MERSENNE( PartialSumOverOld + W(13) ); 
-    end if; 
-    -- ===================================================================================
+      -- ===================================================================================
+      -- Two clock-cycles ahead
+      if( flag(1) = '1' ) then
+        RotatedPreviousPartialSumOverOld <= 64x"0";
+        PartialSumOverOld                <= W(13);
+      else
+        RotatedPreviousPartialSumOverOld <= Rotate_61bit( PartialSumOverOld , 36 );
+        PartialSumOverOld                <= MOD_MERSENNE( PartialSumOverOld + W(13) ); 
+      end if; 
+      -- ===================================================================================
 
-    -- ===================================================================================
-    -- One clock-cycles ahead
-    PreSum <= MOD_MERSENNE( PartialSumOverOld + RotatedPreviousPartialSumOverOld );
-    -- ===================================================================================
+      -- ===================================================================================
+      -- One clock-cycles ahead
+      PreSum <= MOD_MERSENNE( PartialSumOverOld + RotatedPreviousPartialSumOverOld );
+      -- ===================================================================================
 
-    -- ===================================================================================
-    -- Current clock
-    Temp := SumOverNew + PreSum;
-    if( flag(3) = '1' ) then
-      W(0)       <= MOD_MERSENNE( Temp );
-      SumOverNew <= MOD_MERSENNE( SumOverNew + Temp );
-    elsif( run = '1' ) then
-      W(0)       <= MOD_MERSENNE( W(0) + PreSum );
-      SumOverNew <= MOD_MERSENNE( W(0) + Temp );
-    end if;
-    -- ===================================================================================
+      -- ===================================================================================
+      -- Current clock
+      Temp := SumOverNew + PreSum;
+      if( flag(3) = '1' ) then
+        W(0)       <= MOD_MERSENNE( Temp );
+        SumOverNew <= MOD_MERSENNE( SumOverNew + Temp );
+      elsif( run = '1' ) then
+        W(0)       <= MOD_MERSENNE( W(0) + PreSum );
+        SumOverNew <= MOD_MERSENNE( W(0) + Temp );
+      end if;
+      -- ===================================================================================
 
     END IF;
   END PROCESS;
