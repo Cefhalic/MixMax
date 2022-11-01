@@ -1,14 +1,14 @@
 -- ------------------------------------------------------------------------
 entity MixMaxFli is
 port(
-    clk : in integer range 0 to 1;
-    hi , lo : out integer
+    clk : in integer range 0 to 1 := 0;
+    hi , lo : out natural := 0
 );
 end;
 
 architecture fli of MixMaxFli is
     attribute foreign : string;
-    attribute foreign of fli : architecture is "MixMaxFli ../mixmaxfli.so";
+    attribute foreign of fli : architecture is "MixMaxFli ../testbench/mixmaxfli.so";
 begin end;
 -- ------------------------------------------------------------------------
 
@@ -17,10 +17,9 @@ ARCHITECTURE fli OF MixMax IS
   SIGNAL clock : integer range 0 to 1;
   SIGNAL hi , lo : natural := 0 ;
 begin
-  clock <= 1 when clk = '1' else 0;
-  MixMaxFliInstance : entity work.MixMaxFli PORT MAP( clock , hi , lo );
-  DataOut( 30 DOWNTO  0 ) <= STD_LOGIC_VECTOR( TO_UNSIGNED( lo , 31 ) );
-  DataOut( 60 DOWNTO 31 ) <= STD_LOGIC_VECTOR( TO_UNSIGNED( hi , 30 ) );  
+    clock <= 1 when clk = '1' else 0;
+    MixMaxFliInstance : entity work.MixMaxFli PORT MAP( clock , hi , lo );
+    DataOut <= STD_LOGIC_VECTOR( TO_UNSIGNED( hi , 30 ) &  TO_UNSIGNED( lo , 31 ) ); -- slightly perverse, but it appears that the modelsim FLI cannot cope with integers that use the MSB of a word 
 end;
 -- ------------------------------------------------------------------------
 

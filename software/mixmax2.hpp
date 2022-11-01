@@ -45,7 +45,7 @@ struct tRngState
     else if( nextcounter > 0 )
     {
       RotatedPreviousPartialSumOverOld = Rotate_61bit( *PartialSumOverOld , 36 );
-      PartialSumOverOld = *PartialSumOverOld + *W[13]; 
+      PartialSumOverOld = MOD_MERSENNE( *PartialSumOverOld + *W[13] ); 
     } 
     // ===================================================================================
 

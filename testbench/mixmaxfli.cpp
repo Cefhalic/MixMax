@@ -8,7 +8,6 @@ typedef struct
     mtiDriverIdT lo , hi;
 } port_t;
 
-
 // the process function that will be called on each event (in this case only clk)
 static void MixmaxProcess( void *param )
 {   
@@ -20,12 +19,8 @@ static void MixmaxProcess( void *param )
     {
         base_signal::clock();
         uint64_t lVal = lState.get();
-
-        uint32_t lo = ( lVal >>  0 ) & 0x7FFFFFFF;
-        uint32_t hi = ( lVal >> 31 ) & 0x3FFFFFFF;
-
-        mti_ScheduleDriver( ip->lo , lo , 0 , MTI_INERTIAL );
-        mti_ScheduleDriver( ip->hi , hi , 0 , MTI_INERTIAL );
+        mti_ScheduleDriver( ip->lo , ( lVal >>  0 ) & 0x7FFFFFFF , 0 , MTI_INERTIAL ); // slightly perverse, but it appears that the modelsim FLI cannot cope
+        mti_ScheduleDriver( ip->hi , ( lVal >> 31 ) & 0x3FFFFFFF , 0 , MTI_INERTIAL ); // with integers that use the MSB of a word
     }
 }
 

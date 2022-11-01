@@ -7,7 +7,7 @@ int main()
   std::cout << std::setfill('0');
 
   tRngState lState;
-  for( int i(0) ; i!=44 ; ++i )
+  for( int i(0) ; i!=70 ; ++i )
   {
     base_signal::clock();
     std::cout << std::hex << std::setw(16) << lState.get() << std::endl;
