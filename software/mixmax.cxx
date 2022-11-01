@@ -30,7 +30,7 @@ int main()
       base_signal::clock();
       auto lNew  = lState.get();
 
-      if( i%1000 == 0 ) std::cout << std::dec << std::setw(16) << i << "\r" << std::flush;
+      if( ! (i & 0x1FFFF) ) std::cout << std::dec << std::setw(16) << i << "\r" << std::flush;
       if( lNew != lOrig )
       {
         std::cout << std::dec << std::setw(16) << i << " " << std::hex << std::setfill('0') << std::hex << std::setw(16) << lOrig << " " <<  std::setw(16) << lNew << std::endl;
