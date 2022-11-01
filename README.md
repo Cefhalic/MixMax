@@ -5,4 +5,5 @@ A VHDL implementation of the MixMax PRNG
 
 | Revision | Max clock speed | LUTs |
 | -------- | --------------- | ---- |
-| F933605  |             300 |  577 |
+| f933605  |         300 MHz |  577 |
+| cc46a8e  |         300 MHz |  561 |    
