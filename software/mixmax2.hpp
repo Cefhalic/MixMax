@@ -45,7 +45,7 @@ struct tRngState
       flag[ i + 1 ] = flag[ i ];
     }
     flag[0] = flag[15];
-    if( *flag[2] ) run = 1;
+    run = *flag[2] | *run;
 
     // ===================================================================================
     // Two clock-cycles ahead
