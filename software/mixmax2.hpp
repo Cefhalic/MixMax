@@ -21,11 +21,11 @@ inline uint64_t MOD_MERSENNE( const uint64_t& aVal )
 struct tRngState
 {
   signal< uint64_t> W[ 16 ];
-  signal< bool > flag[ 19 ];
+  signal< bool > flag[ 16 ];  
   signal< bool > run;
   signal< uint64_t> PartialSumOverOld , SumOverNew , RotatedPreviousPartialSumOverOld , PreSum;
 
-  tRngState() : W{ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 } , flag{ 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } , run( 0 ) ,
+  tRngState() : W{ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 } , flag{ 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } , run( 0 ) , 
   PartialSumOverOld( 0 ) , SumOverNew( 1 ) , RotatedPreviousPartialSumOverOld( 0 ) , PreSum( 0 )
   {}
 
@@ -39,17 +39,17 @@ struct tRngState
     // std::cout << " " << std::setw(16) << *W[0] << " " << std::setw(16) << *W[13] ;
     // std::cout << " " << std::setw(16) << *PartialSumOverOld << " " << std::setw(16) << *SumOverNew << " " << std::setw(16) << *RotatedPreviousPartialSumOverOld << " " << std::setw(16) << *PreSum << std::endl;
 
-    for( int i(0); i!=15; ++i ) W[ i + 1 ] = W[ i ];
-
-    flag[0] = 0;
-    for( int i(0); i!=18; ++i ) flag[ i + 1 ] = flag[ i ];
-    flag[3] = *flag[2] | *flag[18];
+    for( int i(0); i!=15; ++i )
+    {
+      W[ i + 1 ] = W[ i ];
+      flag[ i + 1 ] = flag[ i ];
+    }
+    flag[0] = flag[15];
     if( *flag[2] ) run = 1;
-
 
     // ===================================================================================
     // Two clock-cycles ahead
-    if( *flag[1] || *flag[17] )
+    if( *flag[1] )
     {
       RotatedPreviousPartialSumOverOld = 0;
       PartialSumOverOld = W[13];
