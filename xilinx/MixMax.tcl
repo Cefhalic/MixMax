@@ -1,4 +1,4 @@
-create_project vivado ./vivado -part xcku15p-ffva1760-1-e
+create_project vivado ./vivado -part xcku15p-ffva1760-1-e -force
 
 set_property target_language VHDL [current_project]
 set_property simulator_language VHDL [current_project]
