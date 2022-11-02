@@ -20,13 +20,13 @@ inline uint64_t MOD_MERSENNE( const uint64_t& aVal )
 
 struct tRngState
 {
-  signal< uint64_t> W[ 14 ];
+  signal< uint64_t> W[ 13 ];
   signal< bool > flag[ 16 ];  
   signal< bool > run;
-  signal< uint64_t> PartialSumOverOld , SumOverNew , RotatedPreviousPartialSumOverOld , PreSum;
+  signal< uint64_t> PartialSumOverOld , SumOverNew , RotatedPreviousPartialSumOverOld , PreSum , PreSum2;
 
-  tRngState() : W{ 1,1,1,1,1,1,1,1,1,1,1,1,1,1 } , flag{ 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } , run( 0 ) , 
-  PartialSumOverOld( 0 ) , SumOverNew( 1 ) , RotatedPreviousPartialSumOverOld( 0 ) , PreSum( 0 )
+  tRngState() : W{ 1,1,1,1,1,1,1,1,1,1,1,1,1 } , flag{ 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } , run( 0 ) , 
+  PartialSumOverOld( 0 ) , SumOverNew( 1 ) , RotatedPreviousPartialSumOverOld( 0 ) , PreSum( 0 ) , PreSum2( 0 )
   {}
 
 
@@ -39,41 +39,46 @@ struct tRngState
     // std::cout << " " << std::setw(16) << *W[0] << " " << std::setw(16) << *W[13] ;
     // std::cout << " " << std::setw(16) << *PartialSumOverOld << " " << std::setw(16) << *SumOverNew << " " << std::setw(16) << *RotatedPreviousPartialSumOverOld << " " << std::setw(16) << *PreSum << std::endl;
 
-    for( int i(0); i!=13; ++i ) W[ i + 1 ] = W[ i ];
+    for( int i(0); i!=12; ++i ) W[ i + 1 ] = W[ i ];
     for( int i(0); i!=16; ++i ) flag[ ( i + 1 ) % 16 ] = flag[ i ];
-    run = *flag[1] | *run;
+    run = *flag[2] | *run;
 
     // ===================================================================================
-    // Two clock-cycles ahead
+    // Three clock-cycles ahead
     if( *flag[0] )
     {
       RotatedPreviousPartialSumOverOld = 0;
-      PartialSumOverOld = W[13];
+      PartialSumOverOld = W[12];
     }
     else
     {
       RotatedPreviousPartialSumOverOld = Rotate_61bit( *PartialSumOverOld , 36 );
-      PartialSumOverOld = MOD_MERSENNE( *PartialSumOverOld + *W[13] ); 
+      PartialSumOverOld = MOD_MERSENNE( *PartialSumOverOld + *W[12] ); 
     } 
     // ===================================================================================
 
     // ===================================================================================
+    // Two clock-cycles ahead
+    PreSum = *PartialSumOverOld + *RotatedPreviousPartialSumOverOld;
+    // ===================================================================================
+
+    // ===================================================================================
     // One clock-cycles ahead
-    PreSum = MOD_MERSENNE( *PartialSumOverOld + *RotatedPreviousPartialSumOverOld );
+    PreSum2 = MOD_MERSENNE( *PreSum );
     // ===================================================================================
 
     // ===================================================================================
     // Current clock
-    auto Temp = *SumOverNew + *PreSum; // Variable
+    auto Temp = *SumOverNew + *PreSum2; // Variable
 
-    if( *flag[2] )
+    if( *flag[3] )
     {
       W[0] = RetVal = MOD_MERSENNE( Temp );
       SumOverNew = MOD_MERSENNE( *SumOverNew + Temp );
     }
     else if( *run )
     { 
-      W[0] = RetVal = MOD_MERSENNE( *W[0] + *PreSum );
+      W[0] = RetVal = MOD_MERSENNE( *W[0] + *PreSum2 );
       SumOverNew = MOD_MERSENNE( *W[0] + Temp );
     }
     // ===================================================================================

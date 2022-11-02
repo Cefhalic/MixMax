@@ -40,7 +40,7 @@ begin
     MixMaxFliInstance : entity work.MixMax(fli) PORT MAP( clk , data_fli );
 
     process(clk)
-        VARIABLE CNT: INTEGER := -2;
+        VARIABLE CNT: INTEGER := -3;
     begin
         if rising_edge(clk) then
             if CNT > 0 THEN
