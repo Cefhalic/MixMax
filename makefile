@@ -3,12 +3,12 @@ default: all
 all: _all
 build: _all
 buildall: _all
-_all: testbench/mixmaxfli.so mixmax2.exe mixmax_orig.exe mixmax.exe
+_all: testbench/mixmaxfli.so mixmax2.exe mixmax_orig.exe mixmax_orig_clean.exe mixmax.exe
 
 .PHONY: clean modelsim vivado
 
 clean:
-	rm -rf testbench/mixmaxfli.so mixmax2.exe mixmax_orig.exe mixmax.exe modelsim.ini modelsim vivado
+	rm -rf testbench/mixmaxfli.so mixmax2.exe mixmax_orig.exe mixmax_orig_clean.exe mixmax.exe modelsim.ini modelsim vivado
 
 modelsim.ini:
 	vmap -c
@@ -30,3 +30,6 @@ mixmax2.exe:
 
 mixmax_orig.exe:
 	g++ -std=c++11 -o mixmax_orig.exe software/mixmax_orig.cxx
+
+mixmax_orig_clean.exe:
+	g++ -std=c++11 -o mixmax_orig_clean.exe software/mixmax_orig_clean.cxx	
