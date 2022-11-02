@@ -41,11 +41,11 @@ struct tRngState
 
     for( int i(0); i!=13; ++i ) W[ i + 1 ] = W[ i ];
     for( int i(0); i!=16; ++i ) flag[ ( i + 1 ) % 16 ] = flag[ i ];
-    run = *flag[2] | *run;
+    run = *flag[1] | *run;
 
     // ===================================================================================
     // Two clock-cycles ahead
-    if( *flag[1] )
+    if( *flag[0] )
     {
       RotatedPreviousPartialSumOverOld = 0;
       PartialSumOverOld = W[13];
@@ -66,7 +66,7 @@ struct tRngState
     // Current clock
     auto Temp = *SumOverNew + *PreSum; // Variable
 
-    if( *flag[3] )
+    if( *flag[2] )
     {
       W[0] = RetVal = MOD_MERSENNE( Temp );
       SumOverNew = MOD_MERSENNE( *SumOverNew + Temp );

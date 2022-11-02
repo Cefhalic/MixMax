@@ -21,7 +21,7 @@ if { ! [batch_mode] } {
   delete wave *
   add wave -hex *
   # add wave -divider
-  # add wave -hex MixMaxVhdInstance/
+  # add wave -hex MixMaxVhdInstance/*
   # add wave -hex MixMaxVhdInstance/W(0)
   # add wave -hex MixMaxVhdInstance/W(13)
   # add wave -hex MixMaxVhdInstance/PartialSumOverOld

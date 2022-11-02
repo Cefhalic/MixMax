@@ -13,7 +13,7 @@ int main()
 
     tRngState lState;
 
-    for( int i(0) ; i!=4 ; ++i )
+    for( int i(0) ; i!=3 ; ++i )
     { 
       // The clock-cycle accurate implementation
       base_signal::clock();

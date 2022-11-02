@@ -19,7 +19,7 @@ ARCHITECTURE fli OF MixMax IS
 begin
     clock <= 1 when clk = '1' else 0;
     MixMaxFliInstance : entity work.MixMaxFli PORT MAP( clock , hi , lo );
-    DataOut <= STD_LOGIC_VECTOR( TO_UNSIGNED( hi , 30 ) &  TO_UNSIGNED( lo , 31 ) ); -- slightly perverse, but it appears that the modelsim FLI cannot cope with integers that use the MSB of a word 
+    DataOut <= STD_LOGIC_VECTOR( TO_UNSIGNED( hi , 30 ) &  TO_UNSIGNED( lo , 31 ) ) when rising_edge( clk ); -- slightly perverse, but it appears that the modelsim FLI cannot cope with integers that use the MSB of a word 
 end;
 -- ------------------------------------------------------------------------
 

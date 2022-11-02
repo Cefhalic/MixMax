@@ -17,7 +17,7 @@ modelsim: modelsim.ini testbench/mixmaxfli.so
 	vsim -nolog -modelsimini ./modelsim.ini -do testbench/MixMax.tcl
 
 vivado:
-	vivado -source xilinx/MixMax.tcl
+	vivado -nolog -nojournal -source xilinx/MixMax.tcl
 
 testbench/mixmaxfli.so:
 	g++ -std=c++11 -Isoftware -I/DataStore/modeltech/include -fPIC -shared -o testbench/mixmaxfli.so testbench/mixmaxfli.cpp
