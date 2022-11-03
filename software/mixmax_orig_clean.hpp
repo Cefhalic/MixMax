@@ -2,12 +2,12 @@
 #include <iostream>
 #include <iomanip>
 
+// #define unlikely(expr) __builtin_expect(!!(expr), 0)
 
 namespace clean
 {
 
   constexpr uint64_t M61( 0x1FFFFFFFFFFFFFFF );
-  constexpr uint64_t M64( 0xFFFFFFFFFFFFFFFF );
 
   inline constexpr uint64_t Rotate_61bit( const uint64_t& aVal , const std::size_t& aSize )
   {
@@ -23,30 +23,61 @@ namespace clean
   {
     uint64_t V[ 16 ];
     int counter;
-    uint64_t PartialSumOverOld , SumOverNew; 
-    uint64_t RetVal;
+    uint64_t SumOverNew , PartialSumOverOld;
 
-    rng_state_t() : V{ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 } , counter( 0 ) , PartialSumOverOld( 0 ) , SumOverNew( 1 )
+    rng_state_t() : V{ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 } , counter( 15 ) , SumOverNew( 1 ) , PartialSumOverOld( 0 )
     {}
 
-    uint64_t get()
+    // Update per call method
+    inline volatile uint64_t get()
     {
-      if( counter == 0 )
+      if( counter != 15 )
       {
-        PartialSumOverOld = V[counter]; 
-        RetVal = V[counter] = MOD_MERSENNE( SumOverNew + PartialSumOverOld );
+        counter += 1;
+        uint64_t RotatedPreviousPartialSumOverOld( Rotate_61bit( PartialSumOverOld , 36 ) );
+        PartialSumOverOld = MOD_MERSENNE( PartialSumOverOld + V[counter] ); 
+        V[counter] = MOD_MERSENNE( V[counter-1] + PartialSumOverOld + RotatedPreviousPartialSumOverOld );
       }
       else
       {
-        uint64_t RotatedPreviousPartialSumOverOld( Rotate_61bit( PartialSumOverOld , 36 ) );
-        PartialSumOverOld = MOD_MERSENNE( PartialSumOverOld + V[counter] ); 
-        RetVal = V[counter] = MOD_MERSENNE( V[counter-1] + PartialSumOverOld + RotatedPreviousPartialSumOverOld );
+        counter = 0;        
+        PartialSumOverOld = V[counter]; 
+        V[counter] = MOD_MERSENNE( SumOverNew + PartialSumOverOld );
       }
 
       SumOverNew = MOD_MERSENNE( SumOverNew + V[counter] ); 
-      counter = (counter+1) % 16;
-      return RetVal;
-    }        
+
+      return V[counter];
+    }   
+
+    // Batch-update, more like the original
+    inline volatile uint64_t get2()
+    {
+      if( counter != 15 )
+      {
+        counter += 1;
+      }
+      else
+      {
+        PartialSumOverOld = V[0];
+        auto lV = V[0] = MOD_MERSENNE( SumOverNew + PartialSumOverOld );
+        SumOverNew = MOD_MERSENNE( SumOverNew + lV );
+
+        for( int i(1); i!=16; ++i )
+        {
+          auto lRotatedPreviousPartialSumOverOld = Rotate_61bit( PartialSumOverOld , 36 );
+          PartialSumOverOld = MOD_MERSENNE( PartialSumOverOld + V[i] ); 
+          lV = V[i] = MOD_MERSENNE( lV + PartialSumOverOld + lRotatedPreviousPartialSumOverOld );
+          SumOverNew = MOD_MERSENNE( SumOverNew + lV );  
+        }
+
+        counter = 0;
+      }
+
+      return V[counter];
+    }   
+
+
   };
 
 

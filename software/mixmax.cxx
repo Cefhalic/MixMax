@@ -5,25 +5,30 @@
 #include <iostream>
 #include <iomanip>
 
-int main()
+int main( int argc , char** argv )
 {
-    std::cout << "Comparing original, cleaned and cycle-accurate implementations \n                 iterations\r" << std::flush;
+    std::cout << "Comparing original implementation, both cleaned implementations and the cycle-accurate implementations \n                 iterations\r" << std::flush;
 
     rng_state_t lStateOrig{ {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1} , 1 , 2 };
     lStateOrig.sumtot = iterate_raw_vec( lStateOrig.V , lStateOrig.sumtot );
 
     clean::rng_state_t lStateClean;
+    clean::rng_state_t lStateClean2;
 
-    tRngState lState;
+    tRngState lCycleState;
 
     for( int i(0) ; i!=4 ; ++i )
     { 
       // The clock-cycle accurate implementation
       base_signal::clock();
-      auto lNew  = lState.get();
+      auto lNew  = lCycleState.get();
     }
 
-    for( int i(0) ; i!=1 ; ++i ) auto lClean = lStateClean.get();
+    for( int i(0) ; i!=1 ; ++i )
+    { 
+      auto lClean  = lStateClean.get();
+      auto lClean2 = lStateClean2.get2();
+    }
 
     for( uint64_t i(0) ; ; ++i )
     { 
@@ -31,15 +36,16 @@ int main()
       auto lOrig = flat( &lStateOrig );
 
       auto lClean = lStateClean.get();
+      auto lClean2 = lStateClean2.get2();      
 
       // The clock-cycle accurate implementation
       base_signal::clock();
-      auto lNew  = lState.get();
+      auto lNew  = lCycleState.get();
 
       if( ! (i & 0x1FFFF) ) std::cout << std::dec << std::setw(16) << i << "\r" << std::flush;
-      if( lNew != lOrig )
+      if( ( lClean != lOrig ) || ( lClean2 != lOrig ) || ( lNew != lOrig ) )
       {
-        std::cout << std::dec << std::setw(16) << i << " " << std::hex << std::setfill('0') << "Original = " << std::hex << std::setw(16) << lOrig << " | Clean = " << std::setw(16) << lClean  << " | New = " << std::setw(16) << lNew << std::endl;
+        std::cout << std::dec << std::setw(16) << i << " " << std::hex << std::setfill('0') << "Original = " << std::hex << std::setw(16) << lOrig << " | Clean = " << std::setw(16) << lClean << " | Clean 2 = " << std::setw(16) << lClean2 << " | New = " << std::setw(16) << lNew << std::endl;
         return 1;
       }
     }

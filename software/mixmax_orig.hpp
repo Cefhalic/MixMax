@@ -1,6 +1,4 @@
 #include <stdint.h>
-// #include <iostream>
-// #include <iomanip>
 
 #define N 17
 #define SPECIALMUL 36
@@ -22,7 +20,6 @@ struct rng_state_t
 
 
 myuint iterate_raw_vec(myuint* Y, myuint sumtotOld){
-	// operates with a raw vector, uses known sum of elements of Y
 	int i;
 	myuint  tempP, tempV;
     Y[0] = ( tempV = sumtotOld);
@@ -34,20 +31,8 @@ myuint iterate_raw_vec(myuint* Y, myuint sumtotOld){
         tempV = MOD_MERSENNE(tempV + tempP + tempPO); // edge cases ?
         Y[i] = tempV;
 		sumtot += tempV; if (sumtot < tempV) {ovflow++;}
-
-        // std::cout << " > "<< std::setw(16) << sumtot << " "<< std::setw(16) << tempV << " " << ovflow << std::endl;
-
 	}
 	myuint x( MOD_MERSENNE(MOD_MERSENNE(sumtot) + (ovflow <<3 )) );
-
-    // std::cout << "-----------------------------------" << std::endl;
-    // for( int i(0) ; i!=9 ; ++i ) std::cout << std::setw(16) << Y[i] << ' ';
-    // std::cout << std::endl;
-    // for( int i(9) ; i!=17 ; ++i ) std::cout << std::setw(16) << Y[i] << ' ';
-    // std::cout << "| " << std::setw(16) << x;    
-    // std::cout << std::endl;
-    // std::cout << "-----------------------------------" << std::endl;
-
     return x;
 }
 
