@@ -7,7 +7,7 @@
 
 int main()
 {
-    std::cout << "Comparing original implementation to cycle-accurate implementation \n                 iterations\r" << std::flush;
+    std::cout << "Comparing original, cleaned and cycle-accurate implementations \n                 iterations\r" << std::flush;
 
     rng_state_t lStateOrig{ {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1} , 1 , 2 };
     lStateOrig.sumtot = iterate_raw_vec( lStateOrig.V , lStateOrig.sumtot );
@@ -23,14 +23,13 @@ int main()
       auto lNew  = lState.get();
     }
 
-    for( int i(0) ; i!=3 ; ++i ) auto lClean = lStateClean.get();
+    for( int i(0) ; i!=1 ; ++i ) auto lClean = lStateClean.get();
 
     for( uint64_t i(0) ; ; ++i )
     { 
       // The original implementation
       auto lOrig = flat( &lStateOrig );
 
-      // The clean c++ version
       auto lClean = lStateClean.get();
 
       // The clock-cycle accurate implementation
@@ -38,7 +37,7 @@ int main()
       auto lNew  = lState.get();
 
       if( ! (i & 0x1FFFF) ) std::cout << std::dec << std::setw(16) << i << "\r" << std::flush;
-      if( ( lClean != lOrig ) || ( lNew != lOrig ) )
+      if( lNew != lOrig )
       {
         std::cout << std::dec << std::setw(16) << i << " " << std::hex << std::setfill('0') << "Original = " << std::hex << std::setw(16) << lOrig << " | Clean = " << std::setw(16) << lClean  << " | New = " << std::setw(16) << lNew << std::endl;
         return 1;

@@ -34,11 +34,6 @@ struct tRngState
   {
     uint64_t RetVal(0xDEADBEEF);
 
-    // std::cout << std::hex << std::setfill('0');
-    //for( auto&i : W ) std::cout << " " << std::setw(16) << *i;
-    // std::cout << " " << std::setw(16) << *W[0] << " " << std::setw(16) << *W[13] ;
-    // std::cout << " " << std::setw(16) << *PartialSumOverOld << " " << std::setw(16) << *SumOverNew << " " << std::setw(16) << *RotatedPreviousPartialSumOverOld << " " << std::setw(16) << *PreSum << std::endl;
-
     for( int i(0); i!=12; ++i ) W[ i + 1 ] = W[ i ];
     for( int i(0); i!=16; ++i ) flag[ ( i + 1 ) % 16 ] = flag[ i ];
     run = *flag[2] | *run;
