@@ -24,7 +24,7 @@ namespace clean
     uint64_t V[ 16 ];
     int counter;
     uint64_t PartialSumOverOld , SumOverNew; 
-     
+    uint64_t RetVal;
 
     rng_state_t() : V{ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 } , counter( 0 ) , PartialSumOverOld( 0 ) , SumOverNew( 1 )
     {}
@@ -34,24 +34,19 @@ namespace clean
       if( counter == 0 )
       {
         PartialSumOverOld = V[counter]; 
-        V[counter] = MOD_MERSENNE( SumOverNew + PartialSumOverOld );
+        RetVal = V[counter] = MOD_MERSENNE( SumOverNew + PartialSumOverOld );
       }
       else
       {
         uint64_t RotatedPreviousPartialSumOverOld( Rotate_61bit( PartialSumOverOld , 36 ) );
         PartialSumOverOld = MOD_MERSENNE( PartialSumOverOld + V[counter] ); 
-        V[counter] = MOD_MERSENNE( V[counter-1] + PartialSumOverOld + RotatedPreviousPartialSumOverOld );
+        RetVal = V[counter] = MOD_MERSENNE( V[counter-1] + PartialSumOverOld + RotatedPreviousPartialSumOverOld );
       }
 
       SumOverNew = MOD_MERSENNE( SumOverNew + V[counter] ); 
-      
-      uint64_t RetVal = V[ counter ];
-
       counter = (counter+1) % 16;
-
       return RetVal;
-    }
-        
+    }        
   };
 
 
