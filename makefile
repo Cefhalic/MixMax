@@ -1,14 +1,32 @@
+# -----------------------------------------------------------------------------------------------------------------------
+# Andrew W. Rose, 2022
+# Imperial College London HEP group
+# and
+# Centre for High-throughput digital electronics and embedded machine learning
+# -----------------------------------------------------------------------------------------------------------------------
+
+# Files for executables
+EXECUTABLE_SOURCES = $(sort $(wildcard software/*.cxx) )
+EXECUTABLES = $(patsubst software/%.cxx,%.exe,${EXECUTABLE_SOURCES})
 
 default: all
 all: _all
 build: _all
 buildall: _all
-_all: testbench/mixmaxfli.so mixmax2.exe mixmax_orig.exe mixmax_orig_clean.exe mixmax.exe time.exe
+_all: ${EXECUTABLES}
 
-.PHONY: clean modelsim vivado
+.PHONY: help clean modelsim vivado
+
+help:
+	@echo -e "Makefile for the MixMax project.\nUsage:"
+	@echo "  - make                - Build executables"
+	@echo "  - make help           - Display this help message"
+	@echo "  - make clean          - Tidy all build products"
+	@echo "  - make modelsim       - Launch and run the VHDL and C++ FLI validation in Modelsim"
+	@echo "  - make vivado         - Launch and run synthesis and implementation of the VHDL in Vivado"
 
 clean:
-	rm -rf testbench/mixmaxfli.so *exe modelsim.ini modelsim vivado
+	rm -rf testbench/mixmaxfli.so ${EXECUTABLES} *.d modelsim.ini modelsim vivado
 
 modelsim.ini:
 	vmap -c
@@ -22,17 +40,7 @@ vivado:
 testbench/mixmaxfli.so:
 	g++ -std=c++11 -Isoftware -I/DataStore/modeltech/include -fPIC -shared -o testbench/mixmaxfli.so testbench/mixmaxfli.cpp
 
-time.exe:
-	g++ -std=c++11 -O3 -o time.exe software/time.cxx
+-include $(EXECUTABLES:.exe=.d)
 
-mixmax.exe:
-	g++ -std=c++11 -O3 -o mixmax.exe software/mixmax.cxx
-
-mixmax2.exe:
-	g++ -std=c++11 -O3 -o mixmax2.exe software/mixmax2.cxx
-
-mixmax_orig.exe:
-	g++ -std=c++11 -O3 -o mixmax_orig.exe software/mixmax_orig.cxx
-
-mixmax_orig_clean.exe:
-	g++ -std=c++11 -O3 -o mixmax_orig_clean.exe software/mixmax_orig_clean.cxx	
+${EXECUTABLES}: %.exe: software/%.cxx
+	g++ -std=c++11 -O3 -MMD $^ -o $@	

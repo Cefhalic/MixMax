@@ -1,3 +1,10 @@
+// -----------------------------------------------------------------------------------------------------------------------
+// Andrew W. Rose, 2022
+// Imperial College London HEP group
+// and
+// Centre for High-throughput digital electronics and embedded machine learning
+// -----------------------------------------------------------------------------------------------------------------------
+
 #include "mti.h"
 #include "mixmax2.hpp"
 

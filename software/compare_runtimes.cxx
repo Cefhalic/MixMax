@@ -1,11 +1,17 @@
-#include "mixmax_orig_clean.hpp"
-#include "mixmax_orig.hpp"
-#include <chrono>
-using namespace std::chrono;
+// -----------------------------------------------------------------------------------------------------------------------
+// Andrew W. Rose, 2022
+// Imperial College London HEP group
+// and
+// Centre for High-throughput digital electronics and embedded machine learning
+// -----------------------------------------------------------------------------------------------------------------------
+
+#include "mixmax_clean.hpp"
+#include "mixmax_orig.hpp" // Must come last because of all the preprocessor directives
 
 #include <iostream>
 #include <iomanip>
-
+#include <chrono>
+using namespace std::chrono;
 
 void TimeOriginal( const uint64_t& aIterations )
 {
@@ -45,7 +51,7 @@ int main()
 {
   std::cout << "Timing original and cleaned implementations" << std::endl;
 
-  uint64_t i( 1e10 );
+  constexpr uint64_t i( 1e10 );
   TimeOriginal( i );
   TimeCleaned( i );
   TimeCleaned2( i );

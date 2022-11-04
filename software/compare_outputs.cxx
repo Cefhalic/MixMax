@@ -1,6 +1,13 @@
+// -----------------------------------------------------------------------------------------------------------------------
+// Andrew W. Rose, 2022
+// Imperial College London HEP group
+// and
+// Centre for High-throughput digital electronics and embedded machine learning
+// -----------------------------------------------------------------------------------------------------------------------
+
 #include "mixmax2.hpp"
-#include "mixmax_orig_clean.hpp"
-#include "mixmax_orig.hpp"
+#include "mixmax_clean.hpp"
+#include "mixmax_orig.hpp" // Must come last because of all the preprocessor directives
 
 #include <iostream>
 #include <iomanip>

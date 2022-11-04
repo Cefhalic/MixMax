@@ -1,8 +1,12 @@
-#include <stdint.h>
-#include <iostream>
-#include <iomanip>
+// -----------------------------------------------------------------------------------------------------------------------
+// Andrew W. Rose, 2022
+// Imperial College London HEP group
+// and
+// Centre for High-throughput digital electronics and embedded machine learning
+// -----------------------------------------------------------------------------------------------------------------------
 
-// #define unlikely(expr) __builtin_expect(!!(expr), 0)
+#include <stdint.h>
+#include <cstddef>
 
 namespace clean
 {

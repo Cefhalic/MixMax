@@ -1,4 +1,9 @@
-# ModelSim script for testing int64 prng
+# -----------------------------------------------------------------------------------------------------------------------
+# Andrew W. Rose, 2022
+# Imperial College London HEP group
+# and
+# Centre for High-throughput digital electronics and embedded machine learning
+# -----------------------------------------------------------------------------------------------------------------------
 
 file mkdir ./modelsim/libs/msim
 cd modelsim

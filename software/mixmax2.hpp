@@ -1,8 +1,12 @@
+// -----------------------------------------------------------------------------------------------------------------------
+// Andrew W. Rose, 2022
+// Imperial College London HEP group
+// and
+// Centre for High-throughput digital electronics and embedded machine learning
+// -----------------------------------------------------------------------------------------------------------------------
+
 #include <stdint.h>
 #include "signal.hpp"
-
-#include <iostream>
-// #include <iomanip>
 
 constexpr uint64_t M61( 0x1FFFFFFFFFFFFFFF );
 constexpr uint64_t M64( 0xFFFFFFFFFFFFFFFF );

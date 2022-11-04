@@ -1,3 +1,10 @@
+-- -----------------------------------------------------------------------------------------------------------------------
+-- Andrew W. Rose, 2022
+-- Imperial College London HEP group
+-- and
+-- Centre for High-throughput digital electronics and embedded machine learning
+-- -----------------------------------------------------------------------------------------------------------------------
+
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;

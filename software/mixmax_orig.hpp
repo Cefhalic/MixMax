@@ -1,3 +1,10 @@
+// -----------------------------------------------------------------------------------------------------------------------
+// Andrew W. Rose, 2022
+// Imperial College London HEP group
+// and
+// Centre for High-throughput digital electronics and embedded machine learning
+// -----------------------------------------------------------------------------------------------------------------------
+
 #include <stdint.h>
 
 #define N 17
@@ -23,12 +30,12 @@ myuint iterate_raw_vec(myuint* Y, myuint sumtotOld){
 	int i;
 	myuint  tempP, tempV;
     Y[0] = ( tempV = sumtotOld);
-    myuint sumtot = Y[0], ovflow = 0; // will keep a running sum of all new elements
-	tempP = 0;              // will keep a partial sum of all old elements
+    myuint sumtot = Y[0], ovflow = 0;
+	tempP = 0;            
 	for (i=1; i<N; i++){
         myuint tempPO = MULWU(tempP);
         tempP = modadd(tempP,Y[i]);
-        tempV = MOD_MERSENNE(tempV + tempP + tempPO); // edge cases ?
+        tempV = MOD_MERSENNE(tempV + tempP + tempPO);
         Y[i] = tempV;
 		sumtot += tempV; if (sumtot < tempV) {ovflow++;}
 	}
