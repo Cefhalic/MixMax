@@ -13,7 +13,7 @@
 #include <chrono>
 using namespace std::chrono;
 
-void TimeOriginal( const uint64_t& aIterations )
+uint64_t TimeOriginal( const uint64_t& aIterations )
 {
   rng_state_t lStateOrig{ {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1} , 1 , 2 };
   lStateOrig.sumtot = iterate_raw_vec( lStateOrig.V , lStateOrig.sumtot );
@@ -23,9 +23,10 @@ void TimeOriginal( const uint64_t& aIterations )
   auto stop = steady_clock::now(); 
   auto duration = duration_cast<nanoseconds>(stop - start).count();
   std::cout << "Original  | " << aIterations << " iterations | " << duration << "ns | " << double(duration)/aIterations << "ns/it" << std::endl;
+  return flat( &lStateOrig );
 }
 
-void TimeCleaned( const uint64_t& aIterations )
+uint64_t TimeCleaned( const uint64_t& aIterations )
 {
   clean::rng_state_t lStateClean;
 
@@ -34,9 +35,10 @@ void TimeCleaned( const uint64_t& aIterations )
   auto stop = steady_clock::now(); 
   auto duration = duration_cast<nanoseconds>(stop - start).count();
   std::cout << "Cleaned 1 | " << aIterations << " iterations | " << duration << "ns | " << double(duration)/aIterations << "ns/it" << std::endl;
+  return lStateClean.get();
 }
 
-void TimeCleaned2( const uint64_t& aIterations )
+uint64_t TimeCleaned2( const uint64_t& aIterations )
 {
   clean::rng_state_t lStateClean;
 
@@ -45,6 +47,7 @@ void TimeCleaned2( const uint64_t& aIterations )
   auto stop = steady_clock::now(); 
   auto duration = duration_cast<nanoseconds>(stop - start).count();
   std::cout << "Cleaned 2 | " << aIterations << " iterations | " << duration << "ns | " << double(duration)/aIterations << "ns/it" << std::endl;
+  return lStateClean.get2();
 }
 
 int main()
@@ -52,9 +55,10 @@ int main()
   std::cout << "Timing original and cleaned implementations" << std::endl;
 
   constexpr uint64_t i( 1e10 );
-  TimeOriginal( i );
-  TimeCleaned( i );
-  TimeCleaned2( i );
+  uint64_t x(0);
+  x ^= TimeOriginal( i );
+  x ^= TimeCleaned( i );
+  x ^= TimeCleaned2( i );
 
   return 0;
 }

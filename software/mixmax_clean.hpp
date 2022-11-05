@@ -5,6 +5,8 @@
 // Centre for High-throughput digital electronics and embedded machine learning
 // -----------------------------------------------------------------------------------------------------------------------
 
+#define likely(expr) __builtin_expect(!!(expr), 1)
+
 #include <stdint.h>
 #include <cstddef>
 
@@ -35,7 +37,7 @@ namespace clean
     // Update per call method
     inline volatile uint64_t get()
     {
-      if( counter != 15 )
+      if( likely( counter != 15 ) )
       {
         counter += 1;
         uint64_t RotatedPreviousPartialSumOverOld( Rotate_61bit( PartialSumOverOld , 36 ) );
@@ -57,7 +59,7 @@ namespace clean
     // Batch-update, more like the original
     inline volatile uint64_t get2()
     {
-      if( counter != 15 )
+      if( likely( counter != 15 ) )
       {
         counter += 1;
       }
@@ -67,6 +69,7 @@ namespace clean
         auto lV = V[0] = MOD_MERSENNE( SumOverNew + PartialSumOverOld );
         SumOverNew = MOD_MERSENNE( SumOverNew + lV );
 
+        #pragma unroll 15
         for( int i(1); i!=16; ++i )
         {
           auto lRotatedPreviousPartialSumOverOld = Rotate_61bit( PartialSumOverOld , 36 );
