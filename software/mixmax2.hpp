@@ -19,9 +19,9 @@ inline constexpr uint64_t Rotate_61bit( const uint64_t& aVal , const std::size_t
   return ((aVal << aSize) & M61) | ( aVal >> ( 61 - aSize ) ); 
 }
 
-inline uint64_t MOD_MERSENNE( const uint64_t& aVal )
+inline uint64_t MOD_MERSENNE( const __uint128_t& aVal )
 {
-  return (aVal & M61) + ((aVal >> 61)&0x7); 
+  return (aVal & M61) + (aVal >> 61); 
 }
 
 
@@ -30,8 +30,8 @@ struct tRngState
   signal< uint64_t> W[ 13 ];
   signal< bool > flag[ 16 ];  
   signal< bool > run;
-  signal< uint64_t> PartialSumOverOld , PrePartialSumOverOld , SumOverNew , RotatedPreviousPartialSumOverOld , PreSum0 , PreSum1A , PreSum1Aclk , PreSum1Aclk2 , PreSum1B , PreW0;
-  signal< uint64_t> C , D , X , PreSumOverNew;
+  signal< __uint128_t > PartialSumOverOld , PrePartialSumOverOld , SumOverNew , RotatedPreviousPartialSumOverOld , PreSum0 , PreSum1A , PreSum1Aclk , PreSum1Aclk2 , PreSum1B , PreW0;
+  signal< __uint128_t > C , D , PreSumOverNew;
 
   //W{ 1,2,3,4,5,6,7,8,9,10,11,12,13 }
   tRngState() : W{ 1,1,1,1,1,1,1,1,1,1,1,1,1 } , flag{ 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } , run( 0 ) , 
@@ -50,7 +50,7 @@ struct tRngState
 
     // ===================================================================================
     // Four clock-cycles ahead
-    // PreSum0 = *W[10] + *W[11];
+    PreSum0 = *W[10] + *W[11];
     // ===================================================================================
 
     // ===================================================================================
@@ -58,14 +58,14 @@ struct tRngState
     if( *flag[1] )
     {
       RotatedPreviousPartialSumOverOld = 0;
-      PartialSumOverOld = W[12];
-      PrePartialSumOverOld = *W[11] + *W[12]; //PreSum0;
+      PartialSumOverOld = *W[12];
+      PrePartialSumOverOld = PreSum0;
     }
     else
     {
       RotatedPreviousPartialSumOverOld = Rotate_61bit( *PartialSumOverOld , 36 );
       PartialSumOverOld = MOD_MERSENNE( *PrePartialSumOverOld );
-      PrePartialSumOverOld = *PartialSumOverOld + *W[11] + *W[12]; //*PreSum0;
+      PrePartialSumOverOld = *PartialSumOverOld + *PreSum0;
     } 
     // ===================================================================================
 
@@ -80,24 +80,9 @@ struct tRngState
     // PreSum1Aclk2 = *PreSum1Aclk;
     // PreSum1B = *PreSum1Aclk + *PreSum1A;
 
-
-    // if( *flag[3] )
-    // {
-      // if( *run )
-      // { 
-        // C = *SumOverNew + *PreW0 + *PreSum1A;
-        // D = ( MOD_MERSENNE( *SumOverNew + *PreW0 ) << 1 ) + *PreSum1A ; 
-      // } else {
-      //   C = *SumOverNew + *PreSum1A + *PreW0;
-      //   D = ( *SumOverNew << 1 ) + *PreSum1A; 
-      // }
-    // }
-    // else if( *run )
-    // { 
-    //  // C = *SumOverNew + *PreSum1A;
-    // }
+    C = *SumOverNew + *PreW0 + *PreSum1A;
+    D = ( *SumOverNew << 1 ) + ( *PreW0 << 1 ) + *PreSum1A; 
     // ===================================================================================
-
 
     // ===================================================================================
     // Current clock
@@ -105,11 +90,11 @@ struct tRngState
     {
       // std::cout << "-----" << std::endl;
 
-      W[0] = RetVal = MOD_MERSENNE( *SumOverNew  + *PreSum1Aclk ); //MOD_MERSENNE( *C );
-      PreW0         = *SumOverNew  + *PreSum1Aclk + *PreSum1A;
+      W[0] = RetVal = MOD_MERSENNE( *C );
+      PreW0         = *C + *PreSum1A;
 
-      SumOverNew    = MOD_MERSENNE( ( *SumOverNew << 1 ) + *PreSum1Aclk ); //MOD_MERSENNE( *D );
-      PreSumOverNew = MOD_MERSENNE( ( 3 * *SumOverNew ) + ( 2 * *PreSum1Aclk ) + *PreSum1A );
+      SumOverNew    = MOD_MERSENNE( *D );
+      PreSumOverNew = *D + *C + *PreSum1A;
 
     }
     else if( *run )
@@ -118,8 +103,7 @@ struct tRngState
       PreW0 = *W[0] + *PreSum1Aclk + *PreSum1A;
 
       SumOverNew    = MOD_MERSENNE( *PreSumOverNew );
-      PreSumOverNew = *SumOverNew + MOD_MERSENNE( *W[0] + *PreW0 ) + MOD_MERSENNE( *PreSum1Aclk + *PreSum1A );
-
+      PreSumOverNew = *SumOverNew + *W[0] + *PreW0 + *PreSum1Aclk + *PreSum1A;
     }
     // ===================================================================================
 
