@@ -24,7 +24,7 @@ int main( int argc , char** argv )
 
     tRngState lCycleState;
 
-    for( int i(0) ; i!=4 ; ++i )
+    for( int i(0) ; i!=5 ; ++i )
     { 
       // The clock-cycle accurate implementation
       base_signal::clock();
