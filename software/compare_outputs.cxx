@@ -24,7 +24,7 @@ int main( int argc , char** argv )
 
     tRngState lCycleState;
 
-    for( int i(0) ; i!=6 ; ++i )
+    for( int i(0) ; i!=5 ; ++i )
     { 
       // The clock-cycle accurate implementation
       base_signal::clock();
@@ -52,7 +52,7 @@ int main( int argc , char** argv )
       if( ! (i & 0x1FFFF) ) std::cout << std::dec << std::setw(16) << i << "\r" << std::flush;
       if( ( lClean != lOrig ) || ( lClean2 != lOrig ) || ( lNew != lOrig ) )
       {
-        std::cout << std::dec << std::setw(16) << i << " " << std::hex << std::setfill('0') << "Original = " << std::hex << std::setw(16) << lOrig << " | Clean = " << std::setw(16) << lClean << " | Clean 2 = " << std::setw(16) << lClean2 << " | New = " << std::setw(16) << lNew << std::endl;
+        std::cout << std::dec << std::setw(16) << i << " " << std::hex << std::setfill('0') << "Original = " << std::setw(16) << lOrig << " | Clean = " << std::setw(16) << lClean << " | Clean 2 = " << std::setw(16) << lClean2 << " | New = " << std::setw(16) << lNew << std::endl;
         return 1;
       }
     }
