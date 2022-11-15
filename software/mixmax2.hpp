@@ -47,7 +47,7 @@ struct tRngState
 
     for( int i(0); i!=12; ++i ) W[ i + 1 ] = W[ i ];
     for( int i(0); i!=16; ++i ) flag[ ( i + 1 ) % 16 ] = flag[ i ];
-    run = *flag[3] | *run;
+    run = *flag[4] | *run;
 
     // ===================================================================================
     // Four clock-cycles ahead
@@ -59,14 +59,14 @@ struct tRngState
     if( *flag[1] )
     {
       RotatedPreviousPartialSumOverOld = 0;
-      PartialSumOverOld = W[12];
-      PrePartialSumOverOld = *W[11] + *W[12]; //PreSum0;
+      PartialSumOverOld = W[11];
+      PrePartialSumOverOld = *W[10] + *W[11]; //PreSum0;
     }
     else
     {
       RotatedPreviousPartialSumOverOld = Rotate_61bit( *PartialSumOverOld , 36 );
       PartialSumOverOld = MOD_MERSENNE( *PrePartialSumOverOld );
-      PrePartialSumOverOld = *PartialSumOverOld + *W[11] + *W[12]; //*PreSum0;
+      PrePartialSumOverOld = *PartialSumOverOld + *W[10] + *W[11]; //*PreSum0;
     } 
     // ===================================================================================
 
@@ -78,35 +78,35 @@ struct tRngState
     // ===================================================================================
     // One clock-cycle ahead
     PreSum1Aclk = MOD_MERSENNE( *PreSum1A );
-    // PreSum1Aclk2 = *PreSum1Aclk;
+    PreSum1Aclk2 = *PreSum1Aclk;
     // PreSum1B = *PreSum1Aclk + *PreSum1A;
 
 
 
-    if( *flag[3] )
+    if( *flag[4] )
     {
-      PreSumOverNew = ( *PreSumOverNew << 1 ) + *PreSum1A; 
+      PreSumOverNew = ( *PreSumOverNew << 1 ) + *PreSum1Aclk; 
     }
-    else if( *flag[4] )
+    else if( *flag[5] )
     {
-      PreSumOverNew = ( 3 * *SumOverNew ) + ( 2 * *PreSum1Aclk ) + *PreSum1A;
+      PreSumOverNew = ( 3 * *SumOverNew ) + ( 2 * *PreSum1Aclk2 ) + *PreSum1Aclk;
     }
     else 
     { 
-      PreSumOverNew = *PreSumOverNew + *W[0] + ( *PreSum1Aclk + *PreSum1A );
+      PreSumOverNew = *PreSumOverNew + *W[0] + ( *PreSum1Aclk2 + *PreSum1Aclk );
     }
 
 
-    if( *flag[3] )
+    if( *flag[4] )
     {
       // Could use "PreW0 = *PreW0 + *SumOverNew + *PreSum1A;" but then PreW0 accumulates unbounded.
       // Instead use W[0] and the additional sum, since W[0] has been mod-mersenne'd.
-      if( *run ) PreW0 = (*W[0] + *PreSum1Aclk) + *PreSum1A + *SumOverNew;
+      if( *run ) PreW0 = (*W[0] + *PreSum1Aclk2) + *PreSum1Aclk + *SumOverNew;
       else       PreW0 = 2;
     }
     else
     { 
-      PreW0 = *PreW0 + *PreSum1A;
+      PreW0 = *PreW0 + *PreSum1Aclk;
     }
 
     if( *run )
