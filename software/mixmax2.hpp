@@ -25,19 +25,20 @@ inline uint64_t MOD_MERSENNE( const __uint128_t& aVal )
 }
 
 
+template < bool UseRun >
 struct tRngState
 {
-  signal< uint64_t> W[ 12 ];
+  signal< uint64_t > W[ 12 ];
   signal< bool > flag[ 16 ];  
   signal< bool > run;
   signal< uint64_t > PartialSumOverOld , PrePartialSumOverOld;
-  signal< __uint128_t > SumOverNew , RotatedPreviousPartialSumOverOld , PreSum0 , PreSum1A , PreSum1Aclk , PreSum2A , PreSum2B , PreW0;
-  signal< __uint128_t > C , D , X , PreSumOverNew;
+  signal< __uint128_t > SumOverNew , RotatedPreviousPartialSumOverOld , PreSum0 , PreSum1A , PreSum1Aclk , PreSum2A , PreSum2B , PreW0 , PreSumOverNew;
+  signal< __uint128_t > C ;
 
   //W{ 1,2,3,4,5,6,7,8,9,10,11,12,13 }
   tRngState() : W{ 1,1,1,1,1,1,1,1,1,1,1,1 } , flag{ 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } , run( 0 ) , 
   PartialSumOverOld( 0 ) , PrePartialSumOverOld( 0 ) , SumOverNew( 1 ) , RotatedPreviousPartialSumOverOld( 0 ), PreSum0(0) , PreSum1A( 0 ) , PreSum1Aclk( 0 ) , PreSum2A( 0 ) , PreSum2B( 0 )
-   , PreW0( 0 ) , C( 0 ) , D( 1 ) , PreSumOverNew( 0 )
+   , PreW0( 0 ) , PreSumOverNew( 0 ) , C( 0 )
   {}
 
 
@@ -78,8 +79,10 @@ struct tRngState
     // ===================================================================================
     // One clock-cycle ahead
     PreSum1Aclk = MOD_MERSENNE( *PreSum1A );
-    PreSum2A = *PreSum1Aclk + *PreSum1A;
-    PreSum2B = ( 2 * *PreSum1Aclk ) + *PreSum1A;
+
+    if( (!UseRun) | *run ) PreSum2A = *PreSum1Aclk + *PreSum1A;
+    PreSum2B = ( *PreSum1Aclk << 1 ) + *PreSum1A;
+
 
     if( *flag[4] )
     {
@@ -93,31 +96,26 @@ struct tRngState
     { 
       PreSumOverNew = *PreSumOverNew + *W[0] + *PreSum2A;
     }
-
+  
+    // C = *D + (*PreSum1A+ *PreSum1Aclk);
 
     if( *flag[4] )
     {
       // Could use "PreW0 = *PreW0 + *SumOverNew + *PreSum1A;" but then PreW0 accumulates unbounded.
       // Instead use W[0] and the additional sum, since W[0] has been mod-mersenne'd.
-      if( *run ) PreW0 = *W[0] + *PreSum2A + *SumOverNew;
-      else       PreW0 = 2;
+      PreW0 = *W[0] + *PreSum2A + *SumOverNew;
+      // PreW0 = ( *W[0] << 2 ) + *C;
     }
     else
     { 
       PreW0 = *PreW0 + *PreSum1Aclk;
     }
 
-    if( *run )
+    if( (!UseRun) | *run )
     {
       W[0] = RetVal = MOD_MERSENNE( *PreW0 );
       SumOverNew = MOD_MERSENNE( *PreSumOverNew );
     }
-
-
-      // std::cout << "PreW0" << std::setw(26) << uint64_t(*PreW0) << " | C" << std::setw(26) << uint64_t(*C)  << " | Diff " << std::setw(26) << int64_t(*C - *PreW0)  << std::endl;
-      // std::cout << "PreSum1A" << std::setw(16) << (uint64_t)*PreSum1A << " PreSum1Aclk" << std::setw(16) << (uint64_t)*PreSum1Aclk << " PreSumOverNew" << std::setw(16) << (uint64_t)*PreSumOverNew << " SumOverNew" << std::setw(16) << (uint64_t)*SumOverNew << " PreW0" << std::setw(16) << (uint64_t)*PreW0 << " W[0]" << std::setw(16) << (uint64_t)*W[0]  << std::endl;
-      // std::cout << std::endl;
-
 
     return RetVal;
   }

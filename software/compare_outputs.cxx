@@ -22,7 +22,7 @@ int main( int argc , char** argv )
     clean::rng_state_t lStateClean;
     clean::rng_state_t lStateClean2;
 
-    tRngState lCycleState;
+    tRngState<true> lCycleState;
 
     for( int i(0) ; i!=6 ; ++i )
     { 

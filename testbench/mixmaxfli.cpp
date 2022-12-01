@@ -21,7 +21,7 @@ static void MixmaxProcess( void *param )
     port_t * ip = (port_t *) param;                 // connect function argument to port struct
     mtiInt32T clk = mti_GetSignalValue ( ip->clk ); // get current values from the vhdl world
 
-    static tRngState lState;
+    static tRngState<false> lState;
     if( clk )
     {
         base_signal::clock();

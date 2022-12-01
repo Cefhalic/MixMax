@@ -5,10 +5,16 @@
 # create_clock -period 4.000 -name Clk_1 -waveform {0.000 2.00} [get_ports Clk]
 
 # 300MHz
-create_clock -period 3.333 -name Clk_1 -waveform {0.000 1.666} [get_ports Clk]
+# create_clock -period 3.333 -name Clk_1 -waveform {0.000 1.666} [get_ports Clk]
 
 # 333MHz
 # create_clock -period 3.000 -name Clk_1 -waveform {0.000 1.50} [get_ports Clk]
 
 # 400MHz
 # create_clock -period 2.500 -name Clk_1 -waveform {0.000 1.25} [get_ports Clk]
+
+# 454.5MHz
+create_clock -period 2.200 -name Clk_1 -waveform {0.000 1.1} [get_ports Clk]
+
+# 500MHz
+#create_clock -period 2.000 -name Clk_1 -waveform {0.000 1.00} [get_ports Clk]
