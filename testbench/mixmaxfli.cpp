@@ -24,7 +24,7 @@ static void MixmaxProcess( void *param )
     static tRngState<false> lState;
     if( clk )
     {
-        base_signal::clock();
+        BaseVhdlSignal::clock();
         uint64_t lVal = lState.get();
         mti_ScheduleDriver( ip->lo , ( lVal >>  0 ) & 0x7FFFFFFF , 0 , MTI_INERTIAL ); // slightly perverse, but it appears that the modelsim FLI cannot cope
         mti_ScheduleDriver( ip->hi , ( lVal >> 31 ) & 0x3FFFFFFF , 0 , MTI_INERTIAL ); // with integers that use the MSB of a word

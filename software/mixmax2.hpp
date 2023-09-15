@@ -36,12 +36,12 @@ inline uint64_t MOD_MERSENNE( const __uint128_t& aVal )
 template < bool UseRun >
 struct tRngState
 {
-  signal< uint64_t > W[ 12 ];
-  signal< bool > flag[ 16 ];  
-  signal< bool > run;
-  signal< uint64_t > PartialSumOverOld , PrePartialSumOverOld;
-  signal< __uint128_t > SumOverNew , RotatedPreviousPartialSumOverOld , PreSum0 , PreSum1A , PreSum1Aclk , PreSum2A , PreSum2B , PreW0 , PreSumOverNew;
-  signal< __uint128_t > C ;
+  VhdlSignal< uint64_t > W[ 12 ];
+  VhdlSignal< bool > flag[ 16 ];  
+  VhdlSignal< bool > run;
+  VhdlSignal< uint64_t > PartialSumOverOld , PrePartialSumOverOld;
+  VhdlSignal< __uint128_t > SumOverNew , RotatedPreviousPartialSumOverOld , PreSum0 , PreSum1A , PreSum1Aclk , PreSum2A , PreSum2B , PreW0 , PreSumOverNew;
+  VhdlSignal< __uint128_t > C ;
 
   //W{ 1,2,3,4,5,6,7,8,9,10,11,12,13 }
   tRngState() : W{ 1,1,1,1,1,1,1,1,1,1,1,1 } , flag{ 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } , run( 0 ) , 

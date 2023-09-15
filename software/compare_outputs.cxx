@@ -27,7 +27,7 @@ int main( int argc , char** argv )
     for( int i(0) ; i!=6 ; ++i )
     { 
       // The clock-cycle accurate implementation
-      base_signal::clock();
+      BaseVhdlSignal::clock();
       auto lNew  = lCycleState.get();
     }
 
@@ -46,7 +46,7 @@ int main( int argc , char** argv )
       auto lClean2 = lStateClean2.get2();      
 
       // The clock-cycle accurate implementation
-      base_signal::clock();
+      BaseVhdlSignal::clock();
       auto lNew  = lCycleState.get();
 
       if( ! (i & 0x1FFFF) ) std::cout << std::dec << std::setw(16) << i << "\r" << std::flush;
