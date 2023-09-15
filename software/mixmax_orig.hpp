@@ -1,8 +1,24 @@
 // -----------------------------------------------------------------------------------------------------------------------
+// Konstantin G. Savvidy, 2015
+// College of Science, Nanjing University of Aeronautics and Astronautics, Nanjing, China
+// Center for Translational Medicine, Nanjing University Medical School, Nanjing, China
+// -----------------------------------------------------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------------------------------------------------
+// Tidied and refactored by
+//
 // Andrew W. Rose, 2022
 // Imperial College London HEP group
 // and
 // Centre for High-throughput digital electronics and embedded machine learning
+// -----------------------------------------------------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------------------------------------------------
+// PLEASE NOTE - THIS IS NOT AN OFFICIAL IMPLEMENTATION OF THE MIXMAX GENERATOR.
+// THIS FILE ONLY EXISTS FOR THE VALIDATION OF REFACTORED CODE AND THE
+// DEVELOPMENT OF THE VHDL IMPLEMENTATION.
+// DO NOT USE THIS CODE IN YOUR OWN PROJECT: PLEASE USE THE VERSION FOUND,
+// FOR EXAMPLE, IN THE BOOST C++ LIBRARY
 // -----------------------------------------------------------------------------------------------------------------------
 
 #include <stdint.h>
@@ -57,4 +73,12 @@ myuint flat(rng_state_t* X) {
         return X->V[1];
     }
 }
+
+// -----------------------------------------------------------------------------------------------------------------------
+// PLEASE NOTE - THIS IS NOT AN OFFICIAL IMPLEMENTATION OF THE MIXMAX GENERATOR.
+// THIS FILE ONLY EXISTS FOR THE VALIDATION OF REFACTORED CODE AND THE
+// DEVELOPMENT OF THE VHDL IMPLEMENTATION.
+// DO NOT USE THIS CODE IN YOUR OWN PROJECT: PLEASE USE THE VERSION FOUND,
+// FOR EXAMPLE, IN THE BOOST C++ LIBRARY
+// -----------------------------------------------------------------------------------------------------------------------
 

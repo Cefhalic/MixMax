@@ -5,6 +5,14 @@
 // Centre for High-throughput digital electronics and embedded machine learning
 // -----------------------------------------------------------------------------------------------------------------------
 
+// -----------------------------------------------------------------------------------------------------------------------
+// PLEASE NOTE - THIS IS NOT AN OFFICIAL IMPLEMENTATION OF THE MIXMAX GENERATOR.
+// THIS FILE ONLY EXISTS FOR THE VALIDATION OF REFACTORED CODE AND THE
+// DEVELOPMENT OF THE VHDL IMPLEMENTATION.
+// DO NOT USE THIS CODE IN YOUR OWN PROJECT: PLEASE USE THE VERSION FOUND,
+// FOR EXAMPLE, IN THE BOOST C++ LIBRARY
+// -----------------------------------------------------------------------------------------------------------------------
+
 #define likely(expr) __builtin_expect(!!(expr), 1)
 
 #include <stdint.h>
@@ -87,5 +95,12 @@ namespace clean
 
   };
 
-
 }
+
+// -----------------------------------------------------------------------------------------------------------------------
+// PLEASE NOTE - THIS IS NOT AN OFFICIAL IMPLEMENTATION OF THE MIXMAX GENERATOR.
+// THIS FILE ONLY EXISTS FOR THE VALIDATION OF REFACTORED CODE AND THE
+// DEVELOPMENT OF THE VHDL IMPLEMENTATION.
+// DO NOT USE THIS CODE IN YOUR OWN PROJECT: PLEASE USE THE VERSION FOUND,
+// FOR EXAMPLE, IN THE BOOST C++ LIBRARY
+// -----------------------------------------------------------------------------------------------------------------------
