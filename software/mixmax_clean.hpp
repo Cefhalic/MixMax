@@ -6,6 +6,14 @@
 // -----------------------------------------------------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------------------------------------------------
+// Derived from an original algorithm by
+//
+// Konstantin G. Savvidy, 2015
+// College of Science, Nanjing University of Aeronautics and Astronautics, Nanjing, China
+// Center for Translational Medicine, Nanjing University Medical School, Nanjing, China
+// -----------------------------------------------------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------------------------------------------------
 // PLEASE NOTE - THIS IS NOT AN OFFICIAL IMPLEMENTATION OF THE MIXMAX GENERATOR.
 // THIS FILE ONLY EXISTS FOR THE VALIDATION OF REFACTORED CODE AND THE
 // DEVELOPMENT OF THE VHDL IMPLEMENTATION.
